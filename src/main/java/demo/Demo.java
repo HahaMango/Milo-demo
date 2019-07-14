@@ -1,7 +1,8 @@
 package demo;
 
+import demo.ExampleRunner.ReadExample;
+import demo.ExampleRunner.Runner;
 import demo.certificate.CerLoad;
-import demo.certificate.DerPemLoadImp;
 import demo.certificate.PKCS12LoadImp;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfig;
@@ -27,6 +28,7 @@ public class Demo {
         File cerfile = new File("example-client.pfx");
 
         CerLoad cerLoad = new PKCS12LoadImp();    //加载pfx证书文件的实例
+        Runner runner = new ReadExample();   //Runner对象
         //CerLoad cerLoad = new DerPemLoadImp();    加载der和pem证书文件的实例
         X509Certificate certificate  =cerLoad.getCer(cerfile);  //获取证书对象
         KeyPair keyPair = cerLoad.getKeyPair(cerfile);          //获取密钥对 对象
@@ -58,10 +60,10 @@ public class Demo {
         //利用OpcUaClientConfig创建OPC UA客户端
         OpcUaClient opcClient = new OpcUaClient(config);
 
-        /**
-         *
-         *  其他代码
-         *
-         */
+        try {
+            runner.Run(opcClient);
+        }catch (Exception e){
+            System.out.println("发生异常: "+e);
+        }
     }
 }
